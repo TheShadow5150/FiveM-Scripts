@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Infinite Jobs</title>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div id="app" class="hidden">
+  <div class="shell">
+
+    <!-- ── Sidebar ─────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        </div>
+        <span class="brand-name">Infinite Jobs</span>
+      </div>
+
+      <div class="sidebar-player">
+        <div class="player-avatar" id="playerAvatar">?</div>
+        <div class="player-info">
+          <div class="player-name" id="playerName">Loading…</div>
+          <div class="player-slots" id="playerSlots">0 / 3 slots</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="jobs">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          My Jobs
+        </button>
+        <button class="nav-item" data-view="browse">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Browse
+        </button>
+        <button class="nav-item" data-view="applications">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+          Applications
+          <span class="nav-badge hidden" id="appBadge">0</span>
+        </button>
+        <button class="nav-item nav-announce hidden" data-view="announce" id="announceNavBtn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8V4L2 12l20 8v-4"/><path d="M22 12H2"/></svg>
+          Announce
+          <span class="announce-dot hidden" id="announceDot"></span>
+        </button>
+      </nav>
+
+      <button class="sidebar-close" id="closeBtn" aria-label="Close menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Close  <kbd>ESC</kbd>
+      </button>
+    </aside>
+
+    <!-- ── Main content ───────────────────────── -->
+    <main class="main">
+
+      <!-- My Jobs view -->
+      <section class="view active" id="view-jobs">
+        <div class="view-header">
+          <h1 class="view-title">My Jobs</h1>
+          <div class="view-hint" id="jobsHint">No jobs yet</div>
+        </div>
+        <div class="jobs-grid" id="jobsGrid">
+          <div class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px;opacity:.3"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            <p>You have no jobs yet.</p>
+            <p class="empty-sub">Browse available jobs to get started.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Browse view -->
+      <section class="view hidden" id="view-browse">
+        <div class="view-header">
+          <h1 class="view-title">Browse Jobs</h1>
+          <div class="search-wrap">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search jobs…" autocomplete="off"/>
+          </div>
+        </div>
+        <div class="jobs-grid" id="browseGrid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            Loading available jobs…
+          </div>
+        </div>
+      </section>
+
+      <!-- Applications view -->
+      <section class="view hidden" id="view-applications">
+        <div class="view-header">
+          <h1 class="view-title">Applications</h1>
+          <div class="view-hint">Review pending job applications</div>
+        </div>
+        <div class="jobs-grid" id="appGrid">
+          <div class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px;opacity:.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+            <p>No pending applications.</p>
+            <p class="empty-sub">Managers and owners can review applications here.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Announce view -->
+      <section class="view hidden" id="view-announce">
+        <div class="view-header">
+          <h1 class="view-title">Business Announcement</h1>
+          <div class="view-hint" id="announceHint">Broadcast to all players in the city</div>
+        </div>
+
+        <div class="announce-card">
+          <div class="announce-who" id="announceWho"></div>
+          <textarea
+            id="announceMsg"
+            class="announce-textarea"
+            placeholder="Write your city-wide announcement… (5–300 characters)"
+            maxlength="300"
+          ></textarea>
+          <div class="announce-footer">
+            <span class="char-count" id="charCount">0 / 300</span>
+            <div class="announce-actions">
+              <span class="cooldown-label hidden" id="cooldownLabel"></span>
+              <button class="btn-send" id="sendBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8V4L2 12l20 8v-4"/><path d="M22 12H2"/></svg>
+                Send to City
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="announce-rules">
+          <p><strong>Rules:</strong> Announcements are visible to every player in the server. Only Owner, Manager, and Chief roles can broadcast. One announcement per 30 minutes.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Application modal -->
+<div class="modal-backdrop hidden" id="applyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Apply for Job</h2>
+      <button class="modal-close" id="modalClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">Your name</label>
+        <input class="field-input" type="text" id="modalName" readonly/>
+      </div>
+      <div class="field">
+        <label class="field-label">Position</label>
+        <input class="field-input" type="text" id="modalPosition" readonly/>
+      </div>
+      <div class="field">
+        <label class="field-label">Cover message</label>
+        <textarea class="field-textarea" id="modalMessage" placeholder="Tell management why you want this position…" maxlength="2000"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="modalCancel">Cancel</button>
+      <button class="btn-primary" id="modalSubmit">Submit Application</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quit confirmation modal -->
+<div class="modal-backdrop hidden" id="quitModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title">Quit job?</h2>
+      <button class="modal-close" id="quitModalClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="quit-msg" id="quitMsg">Are you sure you want to quit <strong id="quitJobName"></strong>? This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="quitCancel">Keep job</button>
+      <button class="btn-danger" id="quitConfirm">Yes, quit</button>
+    </div>
+  </div>
+</div>
+
+<!-- City-wide announcement overlay -->
+<div class="city-ann hidden" id="cityAnn">
+  <div class="city-ann-inner">
+    <div class="city-ann-left">
+      <svg class="city-ann-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8V4L2 12l20 8v-4"/><path d="M22 12H2"/></svg>
+    </div>
+    <div class="city-ann-body">
+      <div class="city-ann-from">
+        <span class="city-ann-job" id="annJob"></span>
+        <span class="city-ann-sep">·</span>
+        <span class="city-ann-grade" id="annGrade"></span>
+      </div>
+      <div class="city-ann-text" id="annText"></div>
+      <div class="city-ann-sender" id="annSender"></div>
+    </div>
+    <button class="city-ann-close" id="annClose" aria-label="Dismiss">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="city-ann-bar-wrap"><div class="city-ann-bar" id="annBar"></div></div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
